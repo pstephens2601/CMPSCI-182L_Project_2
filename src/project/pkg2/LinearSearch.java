@@ -13,7 +13,10 @@ public class LinearSearch {
 
     public static void main(String[] args) {
         
-        int [] searches = new int[20];
+        int [] linearSearches = new int[20];
+        int [] binarySearches = new int[20];
+        int numSearches = 0;
+        
         String[] names = { "fred" , "barney", "tom", "jerry", "larry", "moe", "curly", 
         "betty" , "wilma", "bart", "homer", "marge", "maggie", "lisa", 
         "pebbles" , "bambam", "smithers", "burns", "milhouse", "george", "astro", 
@@ -28,23 +31,32 @@ public class LinearSearch {
         "spiderman" , "batman", "superman", "supergirl", "robin", "catwoman","penguin", 
         "thing" , "flash", "silversurfer", "xmen", "pokemon", "joker", "wonderwoman" 
         }; 
-        String[] sortednames = new String[names.length];  // will contain a sorted copy of names Array ( not global )
+        String[] sortedNames = new String[names.length];  // will contain a sorted copy of names Array ( not global )
         String input;
+        
         LinearSearch search = new LinearSearch();
-        int nextIndex = 0;
+        search.copyArray(names, sortedNames);
         
         do {
+            
                 System.out.print("Please enter a name to search for: ");
             
                 input = UserInput.getString();
-                int comparisons = search.linearSearch(names, input);
-                searches[nextIndex] = comparisons;
-                nextIndex++;
-                int average = search.calculateAverage(searches);
+                int linearComparisons = search.linearSearch(names, input);
+                int binaryComparisons = search.binarySearch(sortedNames, input);
+                        
+                linearSearches[numSearches] = linearComparisons;
+                binarySearches[numSearches] = binaryComparisons;
+                numSearches++;
                 
-                System.out.print("Linear search: " + comparisons + " comparisons, average " + average + " comparisons per linear search \n");
-             
-        } while ((!input.equalsIgnoreCase("exit") || !input.equalsIgnoreCase("quit")) && nextIndex < searches.length - 1);
+                int linearAverage = search.calculateAverage(linearSearches);
+                int binaryAverage = search.calculateAverage(binarySearches);
+                
+                System.out.print("\nLinear search: " + linearComparisons + " comparisons, average " + linearAverage + " comparisons per linear search \n");
+                System.out.print("Binary search: " + binaryComparisons + " comparisons, average " + binaryAverage + " comparisons per binary search \n");
+                System.out.print("Binary search currently 'saves' " + (linearAverage - binaryAverage) + " comparisons on average per search.\n\n");
+                
+        } while ((!input.equalsIgnoreCase("exit") || !input.equalsIgnoreCase("quit")) && numSearches < linearSearches.length - 1);
     }
     
     public int linearSearch(String [] namesArray, String name) {
@@ -68,13 +80,34 @@ public class LinearSearch {
         Arrays.sort(target);
     }
     
-    public int binarySearch ( String [ ] sortedArray ) {
+    public int binarySearch ( String [ ] sortedArray, String name ) {
         
-        for (int i = 0; i < sortedArray.length; i++) {
+        int indexesSearched = 0;
+        int lowerBound = 0;
+        int upperBound = sortedArray.length - 1;
+        int currentIndex;
+        
+        while(true) {
+            currentIndex = (lowerBound + upperBound) / 2;
+            indexesSearched++;
             
+            if (name.compareTo(sortedArray[currentIndex]) ==  0) {
+                return indexesSearched;
+            }
+            else if (lowerBound > upperBound) {
+                return indexesSearched;
+            }
+            else {
+                if (name.compareTo(sortedArray[currentIndex]) > 0) {
+                    lowerBound = currentIndex + 1;
+                }
+                else {
+                    upperBound = currentIndex - 1;
+                }
+            }
+                
+            indexesSearched++;
         }
-        
-        return 0;
     }
     
     private int calculateAverage(int [] nums) {
