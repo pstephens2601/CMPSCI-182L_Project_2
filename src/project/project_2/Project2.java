@@ -1,15 +1,18 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * Patrick Stephens
+ * 3/11/14
+ * Project 2:  / CMPSCI 182L - Ferguson
+ * Description:  Class which compares the number of array slots looked at in linear 
+ * and binary searches.
+ *
  */
 
-package project.pkg2;
+package project.project_2;
 
 import userinput.UserInput;
 import java.util.Arrays;
 
-public class LinearSearch {
+public class Project2 {
 
     public static void main(String[] args) {
         
@@ -26,16 +29,18 @@ public class LinearSearch {
         "simba" , "scar", "mufasa", "ariel", "flounder", "bugs", "daffy", 
         "elmer" , "foghorn", "chickenhawk", "roger", "jessica", "hank", "bobby", 
         "peggy" , "spot", "pongo", "perdy", "buzz", "potatohead", "woody", 
-        "chuckie" , "tommy", "phil", "lil", "angelica", "dill", "spike", 
+        "chuckie" , "tommy", "phil", "lil", "angelica", "dill", "spike",
         "pepe" , "speedy", "yosemite", "sam", "tweety", "sylvester", "granny", 
         "spiderman" , "batman", "superman", "supergirl", "robin", "catwoman","penguin", 
         "thing" , "flash", "silversurfer", "xmen", "pokemon", "joker", "wonderwoman" 
         }; 
-        String[] sortedNames = new String[names.length];  // will contain a sorted copy of names Array ( not global )
-        String input;
+        String[] sortedNames = new String[names.length];  // will contain a sorted copy of names Array
+        String input; //used to store user input
         
-        LinearSearch search = new LinearSearch();
-        search.copyArray(names, sortedNames);
+        Project2 search = new Project2();
+        
+        //copy and sort name array and then store the number of comparisons needed in sortComparisons
+        int sortComparisons = search.copyArray(names, sortedNames);
         
         do {
             
@@ -51,10 +56,12 @@ public class LinearSearch {
                 
                 int linearAverage = search.calculateAverage(linearSearches);
                 int binaryAverage = search.calculateAverage(binarySearches);
+                int numberOfRequiredSearches = (sortComparisons + binaryAverage) / linearAverage;
                 
                 System.out.print("\nLinear search: " + linearComparisons + " comparisons, average " + linearAverage + " comparisons per linear search \n");
                 System.out.print("Binary search: " + binaryComparisons + " comparisons, average " + binaryAverage + " comparisons per binary search \n");
-                System.out.print("Binary search currently 'saves' " + (linearAverage - binaryAverage) + " comparisons on average per search.\n\n");
+                System.out.print("Binary search currently 'saves' " + (linearAverage - binaryAverage) + " comparisons on average per search.\n");
+                System.out.print("It will take " + numberOfRequiredSearches + " searches before binary sort overhead of " + sortComparisons + " comparisons is crossed.\n\n");
                 
         } while ((!input.equalsIgnoreCase("exit") || !input.equalsIgnoreCase("quit")) && numSearches < linearSearches.length - 1);
     }
@@ -72,12 +79,17 @@ public class LinearSearch {
         return numComparisons;
     }
     
-    public void copyArray ( String [ ] source, String [ ] target ) {
+    public int copyArray ( String [ ] source, String [ ] target ) {
+        
+        int comparisons;
+        
         for (int i = 0; i < source.length; i++) {
             target[i] = source[i];
         }
         
-        Arrays.sort(target);
+        comparisons = insertionSort(target);
+        
+        return comparisons;
     }
     
     public int binarySearch ( String [ ] sortedArray, String name ) {
@@ -105,12 +117,32 @@ public class LinearSearch {
                     upperBound = currentIndex - 1;
                 }
             }
-                
-            indexesSearched++;
         }
     }
     
-    private int calculateAverage(int [] nums) {
+    public int insertionSort(String [] unsortedArray) {
+        
+        int comparisons = 0;
+        
+        int insertionIndex, targetIndex;
+        
+        for (targetIndex = 1; targetIndex < unsortedArray.length; targetIndex++) {
+            
+            String temp = unsortedArray[targetIndex];
+            insertionIndex = targetIndex;
+            
+            while(insertionIndex > 0 && temp.compareTo(unsortedArray[insertionIndex - 1]) <= 0) {
+                unsortedArray[insertionIndex] = unsortedArray[insertionIndex - 1];
+                comparisons++;
+                --insertionIndex;
+            }
+            unsortedArray[insertionIndex] = temp;
+        }
+        
+        return comparisons;
+    }
+            
+    public int calculateAverage(int [] nums) {
         int average;
         int total = 0;
         int numInts = 0;
@@ -125,8 +157,7 @@ public class LinearSearch {
             }
         }
         
-        average = total / numInts;
-                
+        average = total / numInts;        
         return average;
     }
 }
