@@ -1,24 +1,17 @@
-/*
- * Patrick Stephens
+/* Patrick Stephens
  * 3/11/14
  * Project 2:  / CMPSCI 182L - Ferguson
  * Description:  Class which compares the number of array slots looked at in linear 
  * and binary searches.
- *
  */
 
 package project.project_2;
 
 import userinput.UserInput;
-import java.util.Arrays;
 
 public class Project2 {
 
     public static void main(String[] args) {
-        
-        int [] linearSearches = new int[20];
-        int [] binarySearches = new int[20];
-        int numSearches = 0;
         
         String[] names = { "fred" , "barney", "tom", "jerry", "larry", "moe", "curly", 
         "betty" , "wilma", "bart", "homer", "marge", "maggie", "lisa", 
@@ -33,7 +26,11 @@ public class Project2 {
         "pepe" , "speedy", "yosemite", "sam", "tweety", "sylvester", "granny", 
         "spiderman" , "batman", "superman", "supergirl", "robin", "catwoman","penguin", 
         "thing" , "flash", "silversurfer", "xmen", "pokemon", "joker", "wonderwoman" 
-        }; 
+        };
+        
+        int [] linearSearches = new int[20];
+        int [] binarySearches = new int[20];
+        int numSearches = 0;
         String[] sortedNames = new String[names.length];  // will contain a sorted copy of names Array
         String input; //used to store user input
         
